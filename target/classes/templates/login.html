@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.w3.org/1999/xhtml">
+<link rel='stylesheet' th:href="@{/login.css}" type='text/css' />
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script th:src="@{/language.js}"></script>
+<style>
+    #en, #pl{
+        display: none;
+    }
+</style>
+<meta charset="UTF-8">
+<body>
+<header class="mainheader">
+    <h1 id='en'>CHOOSE NAME</h1>
+    <h1 id='pl'>IMIENNIK</h1>
+</header>
+
+<div class="mainmenu">
+    <a id='pl' class="active" href="#home">Zalogowany</a>
+    <p><a id='langtog-en' href="#" onclick="switchLang('en'); return false;">English</a></p>
+    <a id='en' class="active" href="#home">Logged</a>
+    <p><a id='langtog-pl' href="#" onclick="switchLang('pl'); return false;">Polish</a></p>
+
+    <div class="mainmenu_2">
+        <a id='wyloguj' class="active">
+            <form th:action="@{/logout}" method="get">
+                <input id='en' type="submit" value="Logout" >
+                <input id='pl' type="submit" value="Wyloguj się" >
+            </form>
+        </a>
+    </div>
+</div>
+
+<div class="choosemenu">
+
+    <a id="button1-pl" href="#przegladaj" onclick="showTable1()" >Przeglądaj i oznaczaj</a>
+    <a id="button2-pl" href="#ocen" onclick="showTable2()">Oceń</a>
+    <a id="button3-pl" href="#twojranking" onclick="showTable3()">Twój ranking</a>
+
+    <a id='button1-en' href="#przegladaj" onclick="showTable1()">Review and tick</a>
+    <a id='button2-en' href="#ocen" onclick="showTable2()">Mark</a>
+    <a id='button3-en' href="#twojranking" onclick="showTable3()">Your ranking</a>
+
+    <div class="choosemenu_2">
+        <a id="button11-pl" href="#zenskie" onclick="showGirls()">Żeńskie</a>
+        <a id="button12-pl" href="#meskie" onclick="showMen()">Męskie</a>
+
+        <a id="button11-en" href="#przegladaj" onclick="showGirls()" >For Girls</a>
+        <a id="button12-en" href="#przegladaj" onclick="showMen()" >For Boys</a>
+
+        <a id="submit" style="display: none;" href="#" onclick="saveId()" ><var id='pl'>Prześlij</var> <var id='en'>Upload</var></a>
+        <a id="submit2" style="display: none;" href="#" onclick="saveId2()" ><var id='pl'>Prześlij</var> <var id='en'>Upload</var></a>
+        <a id="submit3" style="display: none;" href="#" onclick="saveId3()" ><var id='pl'>Prześlij</var> <var id='en'>Upload</var></a>
+        <a id="delete" style="display: none;" href="#" onclick="delete2()" ><var id='pl'>Usuń</var> <var id='en'>Delete</var></a>
+        <a id="delete2" style="display: none;" href="#" onclick="delete3()" ><var id='pl'>Usuń</var> <var id='en'>Delete</var></a>
+    </div>
+
+</div>
+<div class="row">
+    <div class="card-panel">
+        <table id="przegladaj" hidden=false>
+            <thead>
+            <tr>
+                <th></th>
+                <th onclick="sortTable('przegladaj',1)">Imię</th>
+                <th onclick="sortNumber('przegladaj',2)">Liczba</th>
+                <th onclick="sortTable('przegladaj',3)">Płeć</th>
+                <th>Opis</th>
+            </tr>
+            </thead>
+
+            <th:block th:each="name : ${names}">
+
+                <tr>
+                    <td><input type="checkbox" name="checkbox" onclick="tab1_To_tab2()"></td>
+                    <td><div th:text="${name?.name}"></div></td>
+                    <td><div th:text="${name?.count}"></div></td>
+                    <td><div th:text="${name?.sex}"></div></td>
+                    <td><div th:text="${name?.description}"></div></td>
+                    <td style="display:none;"><div th:text="${name?.id}"></div><input type="text" name="id"></td>
+                </tr>
+            </th:block>
+        </table>
+
+        <table id="ocen" hidden=true>
+            <thead>
+            <tr>
+                <th></th>
+                <th onclick="sortTable('ocen',1)">Imię</th>
+                <th onclick="sortNumber('ocen',2)">Liczba</th>
+                <th onclick="sortTable('ocen',3)">Płeć</th>
+                <th>Opis</th>
+            </tr>
+            </thead>
+            <th:block th:each="name2 : ${names2}">
+                <tr>
+                    <td><input type='checkbox' name='checkbox2' onclick='tab2_To_tab3()'></td>
+                    <td><div th:text="${name2?.name}"></div></td>
+                    <td><div th:text="${name2?.count}"></div></td>
+                    <td><div th:text="${name2?.sex}"></div></td>
+                    <td><div th:text="${name2?.description}"></div></td>
+                    <td style="display:none;"><div th:text="${name2?.id}"></div><input type="text" name="idTwo"></td>
+                </tr>
+            </th:block>
+        </table>
+        <table id="ranking" hidden=true>
+            <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th onclick="sortTable('ranking',2)">Ostatnia ocena</th>
+                <th onclick="sortTable('ranking',3)">Imię</th>
+                <th onclick="sortNumber('ranking',4)">Liczba</th>
+                <th onclick="sortTable('ranking',5)">Płeć</th>
+                <th>Opis</th>
+            </tr>
+            </thead>
+            <th:block th:each="name3, index : ${names3}">
+                <tr>
+                    <td><input type='checkbox' name='checkbox3' onclick='tab3_To_tab1()'></td>
+                    <td><select id='select' name='select' onchange="sortNumber2('ranking',1)"><option value='0'>0</option><option value='1'>1</option><option value='2'>2</option> <option value='3'>3</option><option value='4'>4</option><option value='5'>5</option></select></td>
+                    <td><div th:text="${notes[index.index]}"></div></td>
+                    <td><div th:text="${name3?.name}"></div></td>
+                    <td><div th:text="${name3?.count}"></div></td>
+                    <td><div th:text="${name3?.sex}"></div></td>
+                    <td><div th:text="${name3?.description}"></div></td>
+                    <td style="display:none;"><div th:text="${name3?.id}"></div><input type="text" name="idThree"></td>
+                </tr>
+            </th:block>
+        </table>
+    </div>
+</div>
+<script>
+    var tableId= new Array();
+    var tableIdTwo= new Array();
+    var tableIdThree= new Array();
+    var tableNamesHelper= new Array();
+    var tableNamesHelper2;
+
+    var notes= new Array();
+    function tab1_To_tab2()
+    {
+
+        var table1 = document.getElementById("przegladaj"),
+            checkboxes = document.getElementsByName("checkbox");
+        for(var i = 0; i < checkboxes.length; i++)
+            if(checkboxes[i].checked)
+            {
+                var counter=0;
+                for(var j=0; j<tableId.length; j++)
+                {
+                    if(tableId[j]==table1.rows[i+1].cells[5].innerHTML)
+                    {
+                        counter++;
+                        break;
+                    }
+                }
+                if(counter==0)
+                {
+                    tableId.push(table1.rows[i+1].cells[5].innerHTML);
+                }
+                counter=0;
+            }
+    }
+    function saveId() {
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = 'http://localhost:8080/Tab2';
+
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'Ids';
+        hiddenField.value = tableId;
+        form.appendChild(hiddenField);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+    function tab2_To_tab3()
+    {
+        var table1 = document.getElementById("ocen"),
+            checkboxes = document.getElementsByName("checkbox2");
+        for(var i = 0; i < checkboxes.length; i++)
+            if(checkboxes[i].checked)
+            {
+                var counter=0;
+                for(var j=0; j<tableIdTwo.length; j++)
+                {
+                    if(tableIdTwo[j]==table1.rows[i+1].cells[5].innerHTML)
+                    {
+                        counter++;
+                        break;
+                    }
+                }
+                if(counter==0)
+                {
+                    tableIdTwo.push(table1.rows[i+1].cells[5].innerHTML);
+                }
+                counter=0;
+            }
+    }
+    function saveId2() {
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = 'http://localhost:8080/Tab3';
+
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'Ids';
+        hiddenField.value = tableIdTwo;
+        form.appendChild(hiddenField);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+    function delete2() {
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = 'http://localhost:8080/DeleteFromTab2';
+
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'Ids';
+        hiddenField.value = tableIdTwo;
+        form.appendChild(hiddenField);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+    function tab3_To_tab1()
+    {
+        var table1 = document.getElementById("ranking"),
+            checkboxes = document.getElementsByName("checkbox3");
+        for(var i = 0; i < checkboxes.length; i++)
+            if(checkboxes[i].checked)
+            {
+                var counter=0;
+                for(var j=0; j<tableIdThree.length; j++)
+                {
+                    if(tableIdThree[j]==table1.rows[i+1].cells[7].innerHTML)
+                    {
+                        counter++;
+                        break;
+                    }
+                }
+                if(counter==0)
+                {
+                    tableIdThree.push(table1.rows[i+1].cells[7].innerHTML);
+                }
+                counter=0;
+            }
+    }
+    function saveNotes()
+    {
+        var table1 = document.getElementById("ranking"),
+            checkboxes = document.getElementsByName("checkbox3"),
+            note=document.getElementsByName("select");
+        for(var i = 0; i < checkboxes.length; i++){
+            var counter=0;
+            for(var j=0; j<tableIdThree.length; j++)
+            {
+                if(tableIdThree[j]==table1.rows[i+1].cells[7].innerHTML)
+                {
+                    counter++;
+                    break;
+                }
+            }
+            if(counter==0)
+            {
+                tableIdThree.push(table1.rows[i+1].cells[7].innerHTML);
+            }
+            counter=0;
+            notes.push(note[i].options[note[i].selectedIndex].value);
+        }
+    }
+    function saveId3() {
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = 'http://localhost:8080/Note';
+        saveNotes();
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'Ids';
+        hiddenField.value = tableIdThree;
+        form.appendChild(hiddenField);
+
+        const hiddenField2 = document.createElement('input');
+        hiddenField2.type = 'hidden';
+        hiddenField2.name = 'Notes';
+        hiddenField2.value = notes;
+        form.appendChild(hiddenField2);
+        document.body.appendChild(form);
+        form.submit();
+    }
+    function delete3() {
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = 'http://localhost:8080/DeleteFromTab3';
+
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'Ids';
+        hiddenField.value = tableIdThree;
+        form.appendChild(hiddenField);
+        document.body.appendChild(form);
+        form.submit();
+    }
+    function showTable1()
+    {
+        var table1,table2,table3;
+        document.getElementById("button1-pl").className = "active";
+        document.getElementById("button2-pl").className = "";
+        document.getElementById("button3-pl").className = "";
+        document.getElementById("button1-en").className = "active";
+        document.getElementById("button2-en").className = "";
+        document.getElementById("button3-en").className = "";
+        table1 = document.getElementById("przegladaj");
+        table2 = document.getElementById("ocen");
+        table3 = document.getElementById("ranking");
+        table1.style.display='block';
+        for (i = table1.rows.length -1 ; i > 0 ; i--)
+        {
+            table1.rows[i].hidden=false;
+        }
+        table2.style.display='none';
+        table3.style.display='none';
+        table3.hidden=true;
+        table2.hidden=true;
+        table1.hidden=false;
+        document.getElementById("submit").style.display='block';
+        document.getElementById("submit2").style.display='none';
+        document.getElementById("submit3").style.display='none';
+        document.getElementById("delete").style.display='none';
+        document.getElementById("delete2").style.display='none';
+    }
+
+    function showTable2()
+    {
+        var table1,table2,table3;
+        document.getElementById("button1-pl").className = "";
+        document.getElementById("button2-pl").className = "active";
+        document.getElementById("button3-pl").className = "";
+        document.getElementById("button1-en").className = "";
+        document.getElementById("button2-en").className = "active";
+        document.getElementById("button3-en").className = "";
+        table1 = document.getElementById("przegladaj");
+        table2 = document.getElementById("ocen");
+        table3 = document.getElementById("ranking");
+        table1.style.display='none';
+        table2.style.display='block';
+        table3.style.display='none';
+        table1.hidden=true;
+        table2.hidden=false;
+        table3.hidden=true;
+        document.getElementById("submit").style.display='none';
+        document.getElementById("submit2").style.display='block';
+        document.getElementById("submit3").style.display='none';
+        document.getElementById("delete").style.display='block';
+        document.getElementById("delete2").style.display='none';
+    }
+    function showTable3()
+    {
+        var table1,table2,table3;
+        document.getElementById("button1-pl").className = "";
+        document.getElementById("button2-pl").className = "";
+        document.getElementById("button3-pl").className = "active";
+        document.getElementById("button1-en").className = "";
+        document.getElementById("button2-en").className = "";
+        document.getElementById("button3-en").className = "active";
+        table1 = document.getElementById("przegladaj");
+        table2 = document.getElementById("ocen");
+        table3 = document.getElementById("ranking");
+        table1.style.display='none';
+        table2.style.display='none';
+        table3.style.display='block';
+        table1.hidden=true;
+        table2.hidden=true;
+        table3.hidden=false;
+        document.getElementById("submit").style.display='none';
+        document.getElementById("submit2").style.display='none';
+        document.getElementById("submit3").style.display='block';
+        document.getElementById("delete").style.display='none';
+        document.getElementById("delete2").style.display='block';
+    }
+    function sortTable(tablename,n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById(tablename);
+        switching = true;
+        // Set the sorting direction to ascending:
+        dir = "asc";
+        /* Make a loop that will continue until
+        no switching has been done: */
+        while (switching) {
+            // Start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /* Loop through all table rows (except the
+            first, which contains table headers): */
+            for (i = 1; i < (rows.length - 1); i++) {
+                // Start by saying there should be no switching:
+                shouldSwitch = false;
+                /* Get the two elements you want to compare,
+                one from current row and one from the next: */
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /* Check if the two rows should switch place,
+                based on the direction, asc or desc: */
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        // If so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        // If so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /* If a switch has been marked, make the switch
+                and mark that a switch has been done: */
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                // Each time a switch is done, increase this count by 1:
+                switchcount ++;
+            } else {
+                /* If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again. */
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+    function sortNumber(tablename,n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById(tablename);
+        switching = true;
+        dir = "asc";
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                if (dir == "asc") {
+                    if (Number(x.textContent) > Number(y.textContent)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (Number(x.textContent) < Number(y.textContent)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount ++;
+            } else {
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+
+    function showGirls() {
+        var table;
+
+        table=document.getElementById("przegladaj");
+
+        for (i = table.rows.length -1 ; i > 0 ; i--)
+        {
+            table.rows[i].hidden=false;
+        }
+
+        for (i = table.rows.length -1 ; i > 0 ; i--)
+        {
+            x = table.rows[i].getElementsByTagName("TD")[3];
+
+            if (x.textContent.toLowerCase() == 'm')
+            {
+                table.rows[i].hidden=true;
+            }
+        }
+    }
+
+    function showMen() {
+        var table;
+
+        table=document.getElementById("przegladaj");
+
+        for (i = table.rows.length -1 ; i > 0 ; i--)
+        {
+            table.rows[i].hidden=false;
+        }
+
+        for (i = table.rows.length -1 ; i > 0 ; i--)
+        {
+            x = table.rows[i].getElementsByTagName("TD")[3];
+            if (x.textContent.toLowerCase() == 'ż')
+            {
+                table.rows[i].hidden=true;
+            }
+        }
+    }
+
+    function sortNumber2(tablename,n) {
+        var table, rows, switching, i, x, y, shouldSwitch, switchcount = 0;
+        table = document.getElementById(tablename);
+        switching = true;
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[n];
+                var e = x.getElementsByTagName("select")[0];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                var f = y.getElementsByTagName("select")[0];
+                if (e.options[e.selectedIndex].value < f.options[f.selectedIndex].value) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount ++;
+            }
+        }
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.w3.org/1999/xhtml">
+<link rel='stylesheet' th:href="@{/about.css}" type='text/css' />
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script th:src="@{/language.js}"></script>
+<style>
+    #en, #pl{
+        display: none;
+    }
+</style>
+<meta charset="UTF-8">
+
+<body>
+<header class="mainheader">
+    <h1 id='en'>CHOOSE NAME</h1>
+    <h1 id='pl'>IMIENNIK</h1>
+</header>
+
+<div class="mainmenu">
+    <a id='pl' th:href="@{/}">Zaloguj się</a>
+    <a id='pl' th:href="@{/signup}">Zarejestruj się</a>
+    <a id='pl' th:href="@{/about}">O nas</a>
+    <p><a id='langtog-en' href="#" onclick="switchLang('en'); return false;">English</a></p>
+    <a id='en' th:href="@{/}">Log in</a>
+    <a id='en' th:href="@{/signup}">Sign up</a>
+    <a id='en' th:href="@{/about}">About</a>
+    <p><a id='langtog-pl' href="#" onclick="switchLang('pl'); return false;">Polish</a></p>
+</div>
+<div id='pl' class="about">
+    <h2 >Dziękujemy, że z nami jesteś!</h2>
+    <p class="p">Wybór imienia dla dziecka jest bardzo ważną kwestią w dzisiejszych czasach,
+        daletego cieszymy się, że wybrałeś właśnie nasz portal.</p><p class="p"> Od wielu lat staramy się
+    dostarczać najbardziej akutalne dane dotyczące nadawania imion dzieciom w Polsce
+    oraz zapewnić Ci przejrzysty i wygodny sposób na stworzenie jak najabrdziej dopasowanego
+    do Ciebie rankingu, który uporządkuje Twoje wybory i pomoże dokonać właściwego wyboru.</p>
+
+
+</div>
+<div id='en' class="about">
+    <h2 >Thank you for being with us! </h2>
+    <p class="p">Choosing a name for a child is very important nowadays,
+        so we are glad that you have just chosen our portal.</p>
+    <p class="p">We have been trying for many years to provide the most accurate data
+        on naming children in Poland and give you a transparent and convenient
+        way to create a ranking that will organize your choices and
+        help you make the right one. </p>
+</div>
+<footer id='pl'>
+    &copy Imiennik
+</footer>
+<footer id='en'>
+    &copy Choose name
+</footer>
+</body>
+
+</html>

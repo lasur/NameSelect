@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.w3.org/1999/xhtml">
+<link rel='stylesheet' th:href="@{/index.css}" type='text/css' />
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script th:src="@{/language.js}"></script>
+<style>
+    #en, #pl{
+        display: none;
+    }
+</style>
+<meta charset="UTF-8">
+<body>
+<div id="status">
+</div>
+<header class="mainheader">
+    <h1 id='en'>CHOOSE NAME</h1>
+    <h1 id='pl'>IMIENNIK</h1>
+</header>
+
+<body>
+<div class="mainmenu">
+    <a id='en' th:href="@{/}">Log in</a>
+    <a id='en' th:href="@{/signup}">Sign up</a>
+    <a id='en' th:href="@{/about}">About</a>
+    <p><a id='langtog-pl' href="#" onclick="switchLang('pl'); return false;">Polish</a></p>
+    <a id='pl' th:href="@{/}">Zaloguj się</a>
+    <a id='pl' th:href="@{/signup}">Zarejestruj się</a>
+    <a id='pl' th:href="@{/about}">O nas</a>
+    <p><a id='langtog-en' href="#" onclick="switchLang('en'); return false;">English</a></p>
+</div>
+
+<div id='en' class="logform">
+    <form th:action="@{/log}" method="post">
+        <div class="row1">
+            <input id='en' type="text" name="username" placeholder="Username" required>
+            <input id='en' type="password" name="password" placeholder="Password" required>
+            <input id='en' type="submit" value="Login">
+        </div>
+    </form>
+</div>
+<div id='pl' class="logform">
+    <form name='login' th:action="@{/log}" method='POST'>
+        <div class="row1">
+            <input id='pl' type="text" name="username" placeholder="Nazwa użytkownika" required>
+            <input id='pl' type="password" name="password" placeholder="Hasło" required>
+            <input id='pl' type="submit" value="Zaloguj">
+        </div>
+    </form>
+</div>
+
+<footer id='pl'>
+    &copy Imiennik
+</footer>
+<footer id='en'>
+    &copy Choose name
+</footer>
+</body>
+
+</html>
